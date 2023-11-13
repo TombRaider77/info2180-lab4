@@ -1,4 +1,5 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 
 $superheroes = [
   [
@@ -65,8 +66,29 @@ $superheroes = [
 
 ?>
 
-<ul>
-<?php foreach ($superheroes as $superhero): ?>
-  <li><?= $superhero['alias']; ?></li>
+<?php
+$QString = filter_var($_GET['query'], FILTER_SANITIZE_STRING);
+
+?>
+
+<?php if($QString==""):?>
+    <ul>
+        <?php foreach ($superheroes as $superhero): ?>
+            <li><?= $superhero['alias']; ?></li>
+            <?php endforeach; ?>
+    </ul>
+        <?php endif;?>
+
+<?php foreach ($superheroes as $superhero):?>
+    <?php if($QString == $superhero['name'] or $QString == $superhero['alias'] ):?>
+        <h3><?= $superhero['alias']; ?></h3>
+        <h4><?= $superhero['name']; ?></h4>
+        <p><?= $superhero['biography']; ?></p>
+        <?php break?>
+    <?php endif;?>
 <?php endforeach; ?>
-</ul>
+
+<?php if($QString != $superhero['name'] && $QString != "" &&  $QString != $superhero['alias']):?>
+<font color = "red">
+<h2>"SUPERHERO NOT FOUND"</h2>
+<?php endif;?>
